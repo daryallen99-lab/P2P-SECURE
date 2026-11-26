@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P2P Secure · CUP / USDT / Zelle (GitHub · Sin KYC)</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111827;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    body.light {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 { margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .tag { font-size: 0.72rem; background: rgba(16,185,129,0.18); color: #34d399; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(16,185,129,0.4); }
+    .rules-bar { font-size: 0.84rem; color: var(--muted); margin-top: 0.35rem; }
+    .rules-bar strong { color: var(--text); }
+
+    .btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .btn:hover { border-color: var(--primary); }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn.success { background: var(--green); border-color: var(--green); color: #052e16; font-weight: 600; }
+    .btn.danger { border-color: var(--red); color: var(--red); background: transparent; }
+    .btn.mini { font-size: 0.75rem; padding: 0.3rem 0.58rem; }
+
+    .wallet-strip {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .balances { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: center; }
+    .bal-chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 0.42rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+    }
+    .bal-chip small { color: var(--muted); }
+
+    .limit-box { min-width: 220px; }
+    .progress-track { height: 7px; background: var(--bg); border-radius: 999px; overflow: hidden; margin-top: 4px; border: 1px solid var(--border); }
+    .progress-fill { height: 100%; background: var(--primary); transition: width 0.25s ease; }
+
+    nav.tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    main { max-width: 1260px; margin: 1.25rem auto; padding: 0 1rem; }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      margin-top: 0.25rem;
+    }
+
+    label { display: block; font-size: 0.84rem; color: var(--muted); margin-bottom: 0.6rem; }
+
+    .grid-offers {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .badge { font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; background: rgba(59,130,246,0.2); color: #93c5fd; }
+    .badge.desk { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .badge.whale { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .badge.dispute { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .badge.done { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .rate { font-size: 1.3rem; font-weight: 700; margin: 0.45rem 0; }
+    .muted { color: var(--muted); font-size: 0.84rem; }
+    .mt-2 { margin-top: 0.75rem; }
+    .mt-3 { margin-top: 1.1rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 0.65rem; }
+    .max-650 { max-width: 650px; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 1.25rem;
+    }
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      margin: 0.85rem 0;
+    }
+    .qvapay-options { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.45rem; }
+    .q-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.38rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .q-pill input { width: auto; margin: 0; }
+    .chat-messages {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      height: 165px;
+      overflow-y: auto;
+      padding: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.84rem;
+    }
+    .msg { background: var(--surface); padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid var(--border); }
+    .quick-btns { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.45rem 0; }
+    .tx-item { padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; display: flex; justify-content: space-between; gap: 0.5rem; }
+    .check-row { display: flex; align-items: center; gap: 0.45rem; font-size: 0.83rem; margin: 0.35rem 0; cursor: pointer; }
+    .check-row input { width: auto; margin: 0; }
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--green);
+      color: #052e16;
+      font-weight: 600;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      display: none;
+      z-index: 200;
+    }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>P2P Secure <span class="tag">Sin KYC · 45 Ofertas (30 a &gt;1,245)</span></h1>
+      <div class="rules-bar">
+        CUP: <strong>1,140 – 1,170</strong> · Zelle: <strong>3% – 6%</strong> · Depósito mín: <strong>2 USDT</strong> · Stock: <strong>30 a &gt;1,245</strong>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn" id="btn-theme">Tema</button>
+      <button class="btn" id="btn-refresh">Actualizar 45 Ofertas</button>
+      <button class="btn danger" id="btn-reset">Restablecer</button>
+    </div>
+  </header>
+
+  <div class="wallet-strip">
+    <div class="balances" id="wallet-strip"></div>
+    <div class="limit-box">
+      <div class="row">
+        <span class="muted">Límite diario (<span id="lbl-level">PRO</span>): <strong id="lbl-limit">0 / 1,000 USDT</strong></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="limit-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn success mini" id="quick-faucet">+ Recargar (mín. 2 USDT)</button>
+      <button class="btn mini" onclick="switchTab('publish')">Publicar Oferta</button>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="market" onclick="switchTab('market')">Mercado P2P (<span id="lbl-count">0</span>)</button>
+    <button class="tab" data-tab="wallet" onclick="switchTab('wallet')">Wallet, Envío y Swap</button>
+    <button class="tab" data-tab="publish" onclick="switchTab('publish')">Publicar Oferta (Saldo Req.)</button>
+    <button class="tab" data-tab="orders" onclick="switchTab('orders')">Mis Tratos / Disputas (<span id="lbl-trades">0</span>)</button>
+    <button class="tab" data-tab="cupbook" onclick="switchTab('cupbook')">Libreta Tarjetas CUP</button>
+    <button class="tab" data-tab="profile" onclick="switchTab('profile')">Logros y Respaldo</button>
+  </nav>
+
+  <main>
+    <section id="view-market" class="view active">
+      <div class="filters">
+        <select id="f-pair" onchange="renderMarket()">
+          <option value="ALL">Todos los pares</option>
+          <option value="USDT/CUP">USDT / CUP (1140–1170)</option>
+          <option value="USDT/ZELLE">USDT / ZELLE (3%–6%)</option>
+          <option value="ZELLE/CUP">ZELLE / CUP (3%–6%)</option>
+        </select>
+        <select id="f-side" onchange="renderMarket()">
+          <option value="ALL">Compra y Venta</option>
+          <option value="SELL">Anunciante Vende</option>
+          <option value="BUY">Anunciante Compra</option>
+        </select>
+        <select id="f-actor" onchange="renderMarket()">
+          <option value="ALL">Todos (Cuentas, ★)</option>
+          <option value="DESK">Liquidez Rápida</option>
+          <option value="USER">Cuentas Personales</option>
+          <option value="FAV">Solo Favoritos ★</option>
+          <option value="WHALE">Grandes (&gt; 1,245)</option>
+        </select>
+        <select id="f-level" onchange="renderMarket()">
+          <option value="ALL">Todos los niveles</option>
+          <option value="VIP">VIP</option>
+          <option value="GOLD">GOLD</option>
+          <option value="PRO">PRO</option>
+          <option value="BÁSICO">BÁSICO</option>
+        </select>
+        <input id="f-min" type="number" min="30" placeholder="Mín disponible (≥ 30)" oninput="renderMarket()" />
+        <select id="f-sort" onchange="renderMarket()">
+          <option value="default">Orden: Destacados</option>
+          <option value="qty_desc">Mayor Disponible</option>
+          <option value="qty_asc">Menor Disponible</option>
+          <option value="speed">Más Rápidos</option>
+        </select>
+      </div>
+      <div id="market-grid" class="grid-offers"></div>
+    </section>
+
+    <section id="view-wallet" class="view">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Depósito (Mínimo 2 USDT)</h3>
+          <label>Moneda
+            <select id="d-asset">
+              <option value="USDT">USDT (Mín. 2.00)</option>
+              <option value="ZELLE">Zelle (Mín. 2.00)</option>
+              <option value="CUP">CUP (Mín. 2,340.00 CUP)</option>
+            </select>
+          </label>
+          <label>Monto
+            <input id="d-amount" type="number" step="0.01" value="50" />
+          </label>
+          <button class="btn primary" onclick="doDeposit()">Acreditar Depósito</button>
+        </div>
+
+        <div class="card">
+          <h3>Transferencia Interna y Swap</h3>
+          <label>Operación
+            <select id="w-op">
+              <option value="SEND_USDT">Enviar USDT a @usuario cubano</option>
+              <option value="SWAP_USDT_CUP">Convertir USDT → CUP (1,165 CUP)</option>
+              <option value="SWAP_CUP_USDT">Convertir CUP → USDT (1,150 CUP)</option>
+              <option value="SWAP_ZELLE_USDT">Convertir Zelle → USDT (Margen 4%)</option>
+            </select>
+          </label>
+          <input id="w-target" type="text" placeholder="@usuario destino (si envías)" />
+          <input id="w-amount" type="number" step="0.01" placeholder="Monto" />
+          <button class="btn primary mt-2" onclick="doWalletOp()">Ejecutar</button>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="row">
+          <h3>Historial de Movimientos</h3>
+          <select id="tx-filter" style="width:auto;min-width:180px;" onchange="renderWallet()">
+            <option value="ALL">Todos los movimientos</option>
+            <option value="DEPOSITO">Depósitos</option>
+            <option value="ESCROW">Escrow / Ofertas</option>
+            <option value="SWAP">Swaps</option>
+            <option value="ENVIO">Envíos internos</option>
+            <option value="LIBERACION">Liberaciones</option>
+          </select>
+        </div>
+        <div id="tx-log" class="mt-2"></div>
+      </div>
+    </section>
+
+    <section id="view-publish" class="view">
+      <div class="card max-650">
+        <h3>Publicar Oferta P2P (Requiere Saldo Disponible ≥ 30)</h3>
+        <p class="muted">Sin KYC. El saldo comprometido se bloquea en Escrow al publicar.</p>
+        <label>Tipo de oferta
+          <select id="p-side">
+            <option value="SELL">Vendo mi activo (SELL)</option>
+            <option value="BUY">Compro activo (BUY)</option>
+          </select>
+        </label>
+        <label>Par
+          <select id="p-pair">
+            <option value="USDT/CUP">USDT / CUP (Rango 1,140 – 1,170)</option>
+            <option value="USDT/ZELLE">USDT / ZELLE (Margen 3% – 6%)</option>
+            <option value="ZELLE/CUP">ZELLE / CUP (Margen 3% – 6%)</option>
+          </select>
+        </label>
+        <label>Tasa CUP (1140–1170) o Margen Zelle (3–6)
+          <input id="p-rate" type="number" step="0.01" value="1165" />
+        </label>
+        <label>Cantidad disponible (mínimo 30, puede superar 1,245)
+          <input id="p-qty" type="number" min="30" value="1300" />
+        </label>
+        <button class="btn primary" onclick="publishOrder()">Bloquear Saldo y Publicar</button>
+      </div>
+    </section>
+
+    <section id="view-orders" class="view">
+      <div id="my-trades" class="grid-offers"></div>
+    </section>
+
+    <section id="view-cupbook" class="view">
+      <div class="card max-650">
+        <h3>Guardar Tarjeta o Cuenta CUP</h3>
+        <input id="b-alias" type="text" placeholder="Alias (ej. Tarjeta Principal CUP)" />
+        <input id="b-holder" type="text" placeholder="Nombre y apellidos del titular" />
+        <input id="b-card" type="text" placeholder="Número de tarjeta o cuenta CUP" />
+        <input id="b-phone" type="text" placeholder="Teléfono móvil" />
+        <button class="btn primary mt-2" onclick="saveCupCard()">Guardar Destino CUP</button>
+      </div>
+      <div id="cupbook-list" class="grid-offers mt-3"></div>
+    </section>
+
+    <section id="view-profile" class="view">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Logros por Actividad (Sin KYC)</h3>
+          <div id="badges-list" class="mt-2"></div>
+        </div>
+        <div class="card">
+          <h3>Respaldo de Cuenta (JSON)</h3>
+          <p class="muted">Exporta o importa tu saldo, libreta CUP, favoritos y tratos.</p>
+          <div class="row mt-2">
+            <button class="btn primary" onclick="exportJson()">Exportar JSON</button>
+            <button class="btn" onclick="document.getElementById('import-file').click()">Importar JSON</button>
+            <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importJson(event)" />
+          </div>
+          <label class="mt-3">Repositorio GitHub para Issue (usuario/repo)
+            <input id="gh-repo" type="text" value="allenmendoza/p2p-secure" oninput="syncIssueUrl()" />
+          </label>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal-backdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="row">
+        <div>
+          <h2 id="m-title" style="margin:0;">Oferta</h2>
+          <div id="m-desc" class="muted"></div>
+        </div>
+        <div class="row">
+          <span class="badge" id="m-timer">15:00</span>
+          <button class="btn" onclick="closeModal()">Cerrar ✕</button>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-3">
+        <label>Cantidad (<span id="m-asset">USDT</span>)
+          <input id="m-qty" type="number" min="1" step="0.01" oninput="calcFromAsset()" />
+        </label>
+        <label>Calculadora inversa · Quiero recibir (<span id="m-fiat">CUP</span>)
+          <input id="m-rev" type="number" min="1" step="0.01" oninput="calcFromFiat()" />
+        </label>
+      </div>
+      <div class="row">
+        <div id="m-total" class="rate">0.00 CUP</div>
+        <button class="btn mini" onclick="copyText(document.getElementById('m-total').textContent)">Copiar Monto</button>
+      </div>
+
+      <div class="box">
+        <strong>Opciones disponibles estilo QvaPay según la operación:</strong>
+        <div id="m-qvapay-list" class="qvapay-options"></div>
+      </div>
+
+      <div class="box">
+        <div class="row">
+          <strong>Datos para recibir en CUP</strong>
+          <div class="row">
+            <select id="m-preset" style="width:auto;min-width:200px;" onchange="applyPreset()">
+              <option value="">Autocompletar desde Libreta CUP...</option>
+            </select>
+            <button class="btn mini" onclick="copyCupBlock()">Copiar Datos CUP</button>
+          </div>
+        </div>
+        <div class="grid-3 mt-2">
+          <input id="cup-name" type="text" placeholder="Titular completo" oninput="syncIssueUrl()" />
+          <input id="cup-card" type="text" placeholder="Tarjeta o cuenta CUP" oninput="syncIssueUrl()" />
+          <input id="cup-phone" type="text" placeholder="Teléfono / Referencia" oninput="syncIssueUrl()" />
+        </div>
+      </div>
+
+      <div class="box">
+        <strong>Chat de la Oferta</strong>
+        <div class="quick-btns">
+          <button class="btn mini" onclick="insertPhrase('¡Asere! Aquí van mis datos para recibir en CUP.')">Datos CUP</button>
+          <button class="btn mini" onclick="insertPhrase('Transferencia enviada, revisa y libera por favor.')">Pago enviado</button>
+          <button class="btn mini" onclick="insertPhrase('¿Confirmas disponibilidad completa?')">Stock</button>
+        </div>
+        <div id="m-chat-log" class="chat-messages"></div>
+        <div class="row mt-2">
+          <input id="m-chat-input" type="text" placeholder="Escribe un mensaje o envía tus datos CUP..." />
+          <button class="btn primary" onclick="sendChat()">Enviar</button>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <button class="btn success" onclick="startTrade()">Iniciar Trato</button>
+        <a id="m-issue-link" class="btn" target="_blank" rel="noopener noreferrer">Abrir en GitHub Issue</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Copiado</div>
+
+  <script>
+    const STORAGE_KEY = 'p2p_secure_v1';
+    const ACCOUNT_NAMES = ['El_Asere_P2P', 'Cambios_LaHabana', 'La_Chama_USDT', 'Zelle_Cuba_Directo', 'Vedado_Exchange', 'El_Socio_Bauta'];
+    const MEMBER_NAMES = ['dayanis_habana', 'yordanis_cu94', 'liudmila_p2p', 'reinier_motos', 'yailen_store', 'lazaro_crypto'];
+    const LEVELS = ['BÁSICO', 'PRO', 'GOLD', 'VIP'];
+    const LEVEL_LIMITS = { 'BÁSICO': 300, 'PRO': 1000, 'GOLD': 3500, 'VIP': 10000 };
+
+    const QVAPAY_BY_TYPE = {
+      CUP: ['QvaPay P2P CUP', 'Transferencia Tarjeta CUP', 'Transfermóvil', 'EnZona'],
+      USDT: ['QvaPay Wallet USDT', 'USDT BEP20', 'USDT TRC20'],
+      ZELLE: ['Zelle Directo', 'QvaPay Puente Zelle (3%–6%)']
+    };
+
+    const initialState = () => ({
+      level: 'PRO',
+      dailyUsedUsdt: 0,
+      ghRepo: 'allenmendoza/p2p-secure',
+      wallets: {
+        USDT: { available: 150, locked: 0 },
+        ZELLE: { available: 100, locked: 0 },
+        CUP: { available: 60000, locked: 0 }
+      },
+      favorites: ['El_Asere_P2P', 'Zelle_Cuba_Directo'],
+      cupBook: [
+        { alias: 'Tarjeta BPA Principal', holder: 'Allen Mendoza', card: '9225 9598 0000 1234', phone: '5355551234' }
+      ],
+      orders: [],
+      trades: [],
+      chats: {},
+      tx: [
+        { cat: 'DEPOSITO', text: 'Saldo inicial acreditado: +150.00 USDT, +100.00 Zelle, +60,000.00 CUP (mín. 2 USDT)' }
+      ]
+    });
+
+    let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || initialState();
+    let currentOffer = null;
+    let timerInterval = null;
+    let secondsLeft = 900;
+
+    const persist = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+    function showToast(msg = 'Copiado') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    function copyText(txt) {
+      navigator.clipboard?.writeText(txt).catch(() => {});
+      showToast('Copiado al portapapeles');
+    }
+
+    function buildOffers(count = 45) {
+      const pairs = [
+        { asset: 'USDT', fiat: 'CUP' },
+        { asset: 'USDT', fiat: 'ZELLE' },
+        { asset: 'ZELLE', fiat: 'CUP' }
+      ];
+      const list = [];
+      for (let i = 1; i <= count; i++) {
+        const isDesk = i % 3 !== 0;
+        const maker = isDesk ? ACCOUNT_NAMES[i % ACCOUNT_NAMES.length] : MEMBER_NAMES[i % MEMBER_NAMES.length];
+        const level = isDesk ? LEVELS[1 + (i % 3)] : LEVELS[i % 3];
+        const side = i % 2 === 0 ? 'SELL' : 'BUY';
+        const pair = pairs[i % pairs.length];
+
+        const available = i <= 7
+          ? 1250 + ((i * 95) % 600)
+          : 30 + ((i * 67) % 1420);
+
+        const zelleMargin = (pair.asset === 'ZELLE' || pair.fiat === 'ZELLE')
+          ? Number((3 + (i % 4) * 0.95).toFixed(2))
+          : null;
+
+        let rate = 1140 + (i % 31);
+        if (pair.asset === 'USDT' && pair.fiat === 'ZELLE') {
+          rate = Number((1 + (side === 'SELL' ? zelleMargin : -zelleMargin) / 100).toFixed(4));
+        } else if (pair.asset === 'ZELLE' && pair.fiat === 'CUP') {
+          rate = Math.round((1140 + (i % 31)) * (1 - zelleMargin / 100));
+        }
+
+        list.push({
+          id: `SEC-${1000 + i}`,
+          maker,
+          level,
+          isDesk,
+          side,
+          asset: pair.asset,
+          fiat: pair.fiat,
+          rate,
+          zelleMargin,
+          available,
+          releaseMin: 2 + (i % 6),
+          tradesCount: 25 + i * 7
+        });
+      }
+      return list;
+    }
+
+    function renderWallet() {
+      document.getElementById('wallet-strip').innerHTML = Object.entries(state.wallets).map(([k, v]) => `
+        <div class="bal-chip">
+          <strong>${k}</strong>: ${v.available.toFixed(2)} <small>(Escrow: ${v.locked.toFixed(2)})</small>
+        </div>
+      `).join('');
+
+      const cap = LEVEL_LIMITS[state.level] || 1000;
+      const pct = Math.min(100, Math.round((state.dailyUsedUsdt / cap) * 100));
+      document.getElementById('lbl-level').textContent = state.level;
+      document.getElementById('lbl-limit').textContent = `${state.dailyUsedUsdt.toFixed(2)} / ${cap.toLocaleString()} USDT`;
+      document.getElementById('limit-bar').style.width = `${pct}%`;
+
+      const catF = document.getElementById('tx-filter')?.value || 'ALL';
+      const filteredTx = state.tx.filter(item => catF === 'ALL' || item.cat === catF);
+      document.getElementById('tx-log').innerHTML = filteredTx.length
+        ? filteredTx.map(t => `<div class="tx-item"><span>${t.text}</span><span class="badge">${t.cat}</span></div>`).join('')
+        : '<div class="muted">No hay movimientos en esta categoría.</div>';
+    }
+
+    function renderMarket() {
+      const pairF = document.getElementById('f-pair').value;
+      const sideF = document.getElementById('f-side').value;
+      const actorF = document.getElementById('f-actor').value;
+      const levelF = document.getElementById('f-level').value;
+      const minF = Number(document.getElementById('f-min').value) || 30;
+      const sortF = document.getElementById('f-sort').value;
+
+      let list = state.orders.filter(o => {
+        if (pairF !== 'ALL' && `${o.asset}/${o.fiat}` !== pairF) return false;
+        if (sideF !== 'ALL' && o.side !== sideF) return false;
+        if (actorF === 'DESK' && !o.isDesk) return false;
+        if (actorF === 'USER' && o.isDesk) return false;
+        if (actorF === 'FAV' && !state.favorites.includes(o.maker)) return false;
+        if (actorF === 'WHALE' && o.available <= 1245) return false;
+        if (levelF !== 'ALL' && o.level !== levelF) return false;
+        if (o.available < minF) return false;
+        return true;
+      });
+
+      if (sortF === 'qty_desc') list.sort((a, b) => b.available - a.available);
+      if (sortF === 'qty_asc') list.sort((a, b) => a.available - b.available);
+      if (sortF === 'speed') list.sort((a, b) => a.releaseMin - b.releaseMin);
+
+      document.getElementById('lbl-count').textContent = list.length;
+      document.getElementById('market-grid').innerHTML = list.map(o => {
+        const isFav = state.favorites.includes(o.maker);
+        const isWhale = o.available > 1245;
+        return `
+          <div class="card">
+            <div class="row">
+              <div>
+                <strong>${o.maker}</strong>
+                <span class="badge ${o.isDesk ? 'desk' : ''}">${o.isDesk ? 'LIQUIDEZ' : 'CUENTA'} · ${o.level}</span>
+                ${isWhale ? '<span class="badge whale">&gt;1,245</span>' : ''}
+              </div>
+              <button class="btn mini" onclick="toggleFav('${o.maker}')">${isFav ? '★' : '☆'}</button>
+            </div>
+            <div class="muted mt-2">${o.tradesCount} tratos · ~${o.releaseMin} min · ${o.side === 'SELL' ? 'Vende ' + o.asset : 'Compra ' + o.asset}</div>
+            <div class="rate">${o.rate} <small>${o.fiat}/${o.asset}</small></div>
+            <div class="muted">${o.zelleMargin ? `Margen Zelle: ${o.zelleMargin}% · ` : ''}Disp: <strong>${o.available} ${o.asset}</strong></div>
+            <div class="row mt-3">
+              <span class="muted">${o.id}</span>
+              <button class="btn primary" onclick="openOffer('${o.id}')">Aplicar</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFav(maker) {
+      if (state.favorites.includes(maker)) {
+        state.favorites = state.favorites.filter(x => x !== maker);
+      } else {
+        state.favorites.push(maker);
+      }
+      persist();
+      renderMarket();
+      renderBadges();
+    }
+
+    function startModalTimer() {
+      clearInterval(timerInterval);
+      secondsLeft = 900;
+      const updateLbl = () => {
+        const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+        const s = String(secondsLeft % 60).padStart(2, '0');
+        document.getElementById('m-timer').textContent = `${m}:${s}`;
+      };
+      updateLbl();
+      timerInterval = setInterval(() => {
+        if (secondsLeft > 0) {
+          secondsLeft--;
+          updateLbl();
+        }
+      }, 1000);
+    }
+
+    function openOffer(id) {
+      currentOffer = state.orders.find(o => o.id === id);
+      if (!currentOffer) return;
+
+      document.getElementById('m-title').textContent = `${currentOffer.id} · ${currentOffer.maker} (${currentOffer.level})`;
+      document.getElementById('m-desc').textContent = `${currentOffer.asset}/${currentOffer.fiat} · Tasa: ${currentOffer.rate} · Disponible: ${currentOffer.available} ${currentOffer.asset}`;
+      document.getElementById('m-asset').textContent = currentOffer.asset;
+      document.getElementById('m-fiat').textContent = currentOffer.fiat;
+      document.getElementById('m-qty').value = Math.min(30, currentOffer.available);
+      calcFromAsset();
+      startModalTimer();
+
+      const primaryKey = (currentOffer.asset === 'CUP' || currentOffer.fiat === 'CUP') ? 'CUP'
+        : ((currentOffer.asset === 'ZELLE' || currentOffer.fiat === 'ZELLE') ? 'ZELLE' : 'USDT');
+      const opts = [...QVAPAY_BY_TYPE[primaryKey], ...(primaryKey !== 'CUP' ? QVAPAY_BY_TYPE.CUP : [])];
+
+      document.getElementById('m-qvapay-list').innerHTML = opts.map((opt, idx) => `
+        <label class="q-pill">
+          <input type="radio" name="q-opt" value="${opt}" ${idx === 0 ? 'checked' : ''} onchange="syncIssueUrl()" /> ${opt}
+        </label>
+      `).join('');
+
+      document.getElementById('m-preset').innerHTML = `<option value="">Autocompletar desde Libreta CUP...</option>` +
+        state.cupBook.map((c, idx) => `<option value="${idx}">${c.alias} (${c.card})</option>`).join('');
+
+      if (!state.chats[id]) {
+        state.chats[id] = [{
+          sender: currentOffer.maker,
+          text: `Oferta activa (${currentOffer.asset}/${currentOffer.fiat}). Deja tus datos para recibir en CUP y elige tu opción QvaPay.`
+        }];
+      }
+      renderChat();
+      syncIssueUrl();
+      document.getElementById('modal-backdrop').classList.add('open');
+    }
+
+    function calcFromAsset() {
+      if (!currentOffer) return;
+      const qty = Number(document.getElementById('m-qty').value) || 0;
+      const total = Number((qty * currentOffer.rate).toFixed(2));
+      document.getElementById('m-rev').value = total;
+      document.getElementById('m-total').textContent = `${qty} ${currentOffer.asset} ↔ ${total} ${currentOffer.fiat}`;
+      syncIssueUrl();
+    }
+
+    function calcFromFiat() {
+      if (!currentOffer) return;
+      const total = Number(document.getElementById('m-rev').value) || 0;
+      const qty = Number((total / currentOffer.rate).toFixed(2));
+      document.getElementById('m-qty').value = qty;
+      document.getElementById('m-total').textContent = `${qty} ${currentOffer.asset} ↔ ${total} ${currentOffer.fiat}`;
+      syncIssueUrl();
+    }
+
+    function applyPreset() {
+      const idx = document.getElementById('m-preset').value;
+      const item = state.cupBook[idx];
+      if (!item) return;
+      document.getElementById('cup-name').value = item.holder;
+      document.getElementById('cup-card').value = item.card;
+      document.getElementById('cup-phone').value = item.phone;
+      syncIssueUrl();
+    }
+
+    function buildCupSummary() {
+      const name = document.getElementById('cup-name').value.trim();
+      const card = document.getElementById('cup-card').value.trim();
+      const phone = document.getElementById('cup-phone').value.trim();
+      const opt = document.querySelector('input[name="q-opt"]:checked')?.value || 'QvaPay CUP';
+      if (!name && !card && !phone) return '';
+      return `[${opt}] CUP → Titular: ${name || '-'} | Tarjeta: ${card || '-'} | Tel: ${phone || '-'}`;
+    }
+
+    function copyCupBlock() {
+      const summary = buildCupSummary();
+      if (!summary) return showToast('Completa o selecciona datos CUP primero');
+      copyText(summary);
+    }
+
+    function syncIssueUrl() {
+      if (!currentOffer) return;
+      const repo = (document.getElementById('gh-repo')?.value || state.ghRepo || 'allenmendoza/p2p-secure').trim();
+      state.ghRepo = repo;
+      const qty = document.getElementById('m-qty').value;
+      const cup = buildCupSummary();
+      const title = encodeURIComponent(`Orden ${currentOffer.id} · ${qty} ${currentOffer.asset}`);
+      const body = encodeURIComponent(`Oferta: ${currentOffer.id}\nContraparte: ${currentOffer.maker}\nMonto: ${qty} ${currentOffer.asset}\n${cup}`);
+      document.getElementById('m-issue-link').href = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
+    }
+
+    function insertPhrase(txt) {
+      document.getElementById('m-chat-input').value = txt;
+    }
+
+    function sendChat() {
+      if (!currentOffer) return;
+      const input = document.getElementById('m-chat-input');
+      const cupStr = buildCupSummary();
+      const combined = [input.value.trim(), cupStr].filter(Boolean).join(' · ');
+      if (!combined) return;
+      state.chats[currentOffer.id].push({ sender: 'Tú', text: combined });
+      input.value = '';
+      persist();
+      renderChat();
+      syncIssueUrl();
+    }
+
+    function renderChat() {
+      const box = document.getElementById('m-chat-log');
+      const list = state.chats[currentOffer.id] || [];
+      box.innerHTML = list.map(m => `<div class="msg"><strong>${m.sender}:</strong> ${m.text}</div>`).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function startTrade() {
+      if (!currentOffer) return;
+      const qty = Number(document.getElementById('m-qty').value) || 0;
+      if (qty <= 0 || qty > currentOffer.available) return alert('Monto inválido o mayor al disponible.');
+
+      const usdtEquiv = currentOffer.asset === 'USDT' ? qty : (currentOffer.fiat === 'CUP' ? qty / 1155 : qty);
+      const cap = LEVEL_LIMITS[state.level] || 1000;
+      if (state.dailyUsedUsdt + usdtEquiv > cap) {
+        return alert(`Supera tu límite diario de nivel ${state.level} (${cap} USDT).`);
+      }
+
+      state.dailyUsedUsdt = Number((state.dailyUsedUsdt + usdtEquiv).toFixed(2));
+      currentOffer.available = Number((currentOffer.available - qty).toFixed(2));
+
+      state.trades.unshift({
+        id: `TRD-${Math.floor(1000 + Math.random() * 9000)}`,
+        maker: currentOffer.maker,
+        qty,
+        asset: currentOffer.asset,
+        total: (qty * currentOffer.rate).toFixed(2),
+        fiat: currentOffer.fiat,
+        cupStr: buildCupSummary(),
+        refCode: '',
+        chkHolder: false,
+        chkAmount: false,
+        status: 'EN_PROCESO'
+      });
+
+      persist();
+      renderAll();
+      closeModal();
+      switchTab('orders');
+    }
+
+    function renderTrades() {
+      document.getElementById('lbl-trades').textContent = state.trades.length;
+      document.getElementById('my-trades').innerHTML = state.trades.length
+        ? state.trades.map(t => {
+          const stClass = t.status === 'EN_DISPUTA' ? 'dispute' : (t.status === 'COMPLETADA' ? 'done' : '');
+          return `
+            <div class="card">
+              <div class="row">
+                <strong>${t.id} · ${t.maker}</strong>
+                <span class="badge ${stClass}">${t.status}</span>
+              </div>
+              <p>${t.qty} ${t.asset} → ${t.total} ${t.fiat}</p>
+              <p class="muted">${t.cupStr || 'Sin datos CUP ingresados'}</p>
+              <input type="text" placeholder="Referencia / Comprobante de pago" value="${t.refCode || ''}" onchange="setTradeRef('${t.id}', this.value)" />
+              <label class="check-row mt-2">
+                <input type="checkbox" ${t.chkHolder ? 'checked' : ''} onchange="setTradeChk('${t.id}', 'chkHolder', this.checked)" />
+                Verifiqué titular y tarjeta/cuenta destino
+              </label>
+              <label class="check-row">
+                <input type="checkbox" ${t.chkAmount ? 'checked' : ''} onchange="setTradeChk('${t.id}', 'chkAmount', this.checked)" />
+                Verifiqué monto exacto y referencia
+              </label>
+              <div class="row mt-2">
+                <button class="btn success mini" onclick="resolveTrade('${t.id}', 'COMPLETADA')">Liberar / Completar</button>
+                <button class="btn danger mini" onclick="resolveTrade('${t.id}', 'EN_DISPUTA')">Abrir Disputa</button>
+              </div>
+            </div>
+          `;
+        }).join('')
+        : '<div class="card"><p class="muted">No hay tratos iniciados.</p></div>';
+    }
+
+    function setTradeRef(id, val) {
+      const tr = state.trades.find(t => t.id === id);
+      if (tr) { tr.refCode = val; persist(); }
+    }
+
+    function setTradeChk(id, key, val) {
+      const tr = state.trades.find(t => t.id === id);
+      if (tr) { tr[key] = val; persist(); }
+    }
+
+    function resolveTrade(id, status) {
+      const tr = state.trades.find(t => t.id === id);
+      if (!tr || tr.status === 'COMPLETADA') return;
+
+      if (status === 'COMPLETADA' && (!tr.chkHolder || !tr.chkAmount)) {
+        return alert('Marca ambas casillas de verificación antes de liberar o completar.');
+      }
+
+      tr.status = status;
+      if (status === 'COMPLETADA') {
+        state.wallets[tr.asset].available += Number(tr.qty);
+        state.tx.unshift({
+          cat: 'LIBERACION',
+          text: `Liberación ${tr.id} (${tr.refCode || 'sin ref.'}): +${Number(tr.qty).toFixed(2)} ${tr.asset}`
+        });
+      }
+      persist();
+      renderAll();
+    }
+
+    function doDeposit() {
+      const asset = document.getElementById('d-asset').value;
+      const amount = Number(document.getElementById('d-amount').value) || 0;
+      const minVal = asset === 'CUP' ? 2340 : 2;
+      if (amount < minVal) return alert(`Depósito mínimo de 2 USDT (${minVal} ${asset}).`);
+      state.wallets[asset].available += amount;
+      state.tx.unshift({ cat: 'DEPOSITO', text: `Depósito acreditado: +${amount.toFixed(2)} ${asset}` });
+      persist();
+      renderWallet();
+      renderBadges();
+    }
+
+    function doWalletOp() {
+      const op = document.getElementById('w-op').value;
+      const target = document.getElementById('w-target').value.trim();
+      const amount = Number(document.getElementById('w-amount').value) || 0;
+      if (amount <= 0) return alert('Monto inválido.');
+
+      if (op === 'SEND_USDT') {
+        if (!target) return alert('Indica el @usuario destino.');
+        if (state.wallets.USDT.available < amount) return alert('Saldo insuficiente en USDT.');
+        state.wallets.USDT.available -= amount;
+        state.tx.unshift({ cat: 'ENVIO', text: `Envío a ${target}: -${amount.toFixed(2)} USDT` });
+      } else if (op === 'SWAP_USDT_CUP') {
+        if (state.wallets.USDT.available < amount) return alert('Saldo insuficiente en USDT.');
+        const cup = amount * 1165;
+        state.wallets.USDT.available -= amount;
+        state.wallets.CUP.available += cup;
+        state.tx.unshift({ cat: 'SWAP', text: `Swap ${amount} USDT → ${cup.toFixed(2)} CUP` });
+      } else if (op === 'SWAP_CUP_USDT') {
+        if (state.wallets.CUP.available < amount) return alert('Saldo insuficiente en CUP.');
+        const usdt = amount / 1150;
+        state.wallets.CUP.available -= amount;
+        state.wallets.USDT.available += usdt;
+        state.tx.unshift({ cat: 'SWAP', text: `Swap ${amount} CUP → ${usdt.toFixed(2)} USDT` });
+      } else if (op === 'SWAP_ZELLE_USDT') {
+        if (state.wallets.ZELLE.available < amount) return alert('Saldo insuficiente en Zelle.');
+        const usdt = amount * 0.96;
+        state.wallets.ZELLE.available -= amount;
+        state.wallets.USDT.available += usdt;
+        state.tx.unshift({ cat: 'SWAP', text: `Swap Zelle → ${usdt.toFixed(2)} USDT (4%)` });
+      }
+      persist();
+      renderWallet();
+    }
+
+    function publishOrder() {
+      const side = document.getElementById('p-side').value;
+      const [asset, fiat] = document.getElementById('p-pair').value.split('/');
+      const rate = Number(document.getElementById('p-rate').value) || 0;
+      const qty = Number(document.getElementById('p-qty').value) || 0;
+
+      if (qty < 30) return alert('La disponibilidad mínima es 30.');
+      if (asset === 'USDT' && fiat === 'CUP' && (rate < 1140 || rate > 1170)) {
+        return alert('La tasa CUP debe estar entre 1,140 y 1,170.');
+      }
+      if ((asset === 'ZELLE' || fiat === 'ZELLE') && (rate < 3 || rate > 6)) {
+        return alert('El margen Zelle debe estar entre 3% y 6%.');
+      }
+      if (state.wallets[asset].available < qty) {
+        return alert(`Saldo insuficiente en ${asset} (${state.wallets[asset].available.toFixed(2)} disponible).`);
+      }
+
+      state.wallets[asset].available -= qty;
+      state.wallets[asset].locked += qty;
+      state.tx.unshift({ cat: 'ESCROW', text: `Escrow bloqueado por oferta: -${qty.toFixed(2)} ${asset}` });
+
+      const computedRate = (asset === 'ZELLE' || fiat === 'ZELLE')
+        ? (fiat === 'ZELLE' ? Number((1 + rate / 100).toFixed(4)) : Math.round(1160 * (1 - rate / 100)))
+        : rate;
+
+      state.orders.unshift({
+        id: `SEC-USR-${Math.floor(100 + Math.random() * 900)}`,
+        maker: 'mi_cuenta_cu',
+        level: state.level,
+        isDesk: false,
+        side,
+        asset,
+        fiat,
+        rate: computedRate,
+        zelleMargin: (asset === 'ZELLE' || fiat === 'ZELLE') ? rate : null,
+        available: qty,
+        releaseMin: 3,
+        tradesCount: 18
+      });
+
+      persist();
+      renderAll();
+      switchTab('market');
+    }
+
+    function saveCupCard() {
+      const alias = document.getElementById('b-alias').value.trim();
+      const holder = document.getElementById('b-holder').value.trim();
+      const card = document.getElementById('b-card').value.trim();
+      const phone = document.getElementById('b-phone').value.trim();
+      if (!alias || !card) return alert('Completa alias y tarjeta CUP.');
+      state.cupBook.push({ alias, holder, card, phone });
+      persist();
+      renderCupBook();
+      renderBadges();
+    }
+
+    function renderCupBook() {
+      document.getElementById('cupbook-list').innerHTML = state.cupBook.map((c, idx) => `
+        <div class="card">
+          <strong>${c.alias}</strong>
+          <p class="muted">${c.holder} · ${c.card} · Tel: ${c.phone}</p>
+          <div class="row mt-2">
+            <button class="btn mini" onclick="copyText('${c.holder} | ${c.card} | ${c.phone}')">Copiar Datos</button>
+            <button class="btn danger mini" onclick="delCupCard(${idx})">Eliminar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function delCupCard(idx) {
+      state.cupBook.splice(idx, 1);
+      persist();
+      renderCupBook();
+    }
+
+    function renderBadges() {
+      const items = [
+        { name: 'Sin KYC Activo', ok: true, desc: 'Operación directa sin verificación documental.' },
+        { name: 'Libreta CUP Lista', ok: state.cupBook.length > 0, desc: 'Al menos 1 destino CUP guardado.' },
+        { name: 'Primer Trato Abierto', ok: state.trades.length > 0, desc: 'Iniciaste al menos una orden P2P.' },
+        { name: 'Colección de Favoritos', ok: state.favorites.length >= 2, desc: 'Guardaste 2 o más contrapartes.' }
+      ];
+      document.getElementById('badges-list').innerHTML = items.map(b => `
+        <div class="tx-item">
+          <div><strong>${b.name}</strong><div class="muted">${b.desc}</div></div>
+          <span class="badge ${b.ok ? 'done' : ''}">${b.ok ? 'ACTIVO' : 'PENDIENTE'}</span>
+        </div>
+      `).join('');
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'p2p-secure-respaldo.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJson(ev) {
+      const file = ev.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          state = { ...initialState(), ...parsed };
+          if (!state.orders || !state.orders.length) state.orders = buildOffers(45);
+          persist();
+          renderAll();
+          showToast('Respaldo importado');
+        } catch {
+          alert('Archivo JSON inválido.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function closeModal() {
+      clearInterval(timerInterval);
+      document.getElementById('modal-backdrop').classList.remove('open');
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+    }
+
+    document.getElementById('btn-theme').onclick = () => document.body.classList.toggle('light');
+    document.getElementById('btn-refresh').onclick = () => {
+      state.orders = buildOffers(45);
+      persist();
+      renderMarket();
+      showToast('45 ofertas actualizadas');
+    };
+    document.getElementById('btn-reset').onclick = () => {
+      localStorage.removeItem(STORAGE_KEY);
+      state = initialState();
+      state.orders = buildOffers(45);
+      persist();
+      renderAll();
+      showToast('Datos restablecidos');
+    };
+    document.getElementById('quick-faucet').onclick = () => {
+      state.wallets.USDT.available += 10;
+      state.tx.unshift({ cat: 'DEPOSITO', text: 'Recarga rápida: +10.00 USDT (mín. 2 USDT)' });
+      persist();
+      renderWallet();
+      showToast('+10.00 USDT acreditados');
+    };
+
+    function renderAll() {
+      document.getElementById('gh-repo').value = state.ghRepo || 'allenmendoza/p2p-secure';
+      renderWallet();
+      renderMarket();
+      renderTrades();
+      renderCupBook();
+      renderBadges();
+    }
+
+    if (!state.orders || !state.orders.length) {
+      state.orders = buildOffers(45);
+      persist();
+    }
+    renderAll();
+  </script>
+</body>
+</html>
